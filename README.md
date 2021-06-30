@@ -1,4 +1,4 @@
-- 👋 Hi, I’m @Okadrian
+👋 Hi, I’m @Okadrian
 
 - 👀 I’m interested in ...
 
