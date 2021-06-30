@@ -104,37 +104,37 @@ def predict(mail,data_word,prob_word_ham,prob_word_spam):
 	else:
 		print(X)
 		print("The mail is spam")
+def test():
+
+	X=["henry","eat","free","pizza","now"]
 
 
-X=["henry","eat","free","pizza","now"]
-
-
-A=[["this","is","epic","i","promise"],"Spam"]
-B=[["this","is","serious","now","henry"],"Ham"]
-C=[["henry","is","now","serious","sick"],"Ham"]
-D=[["you","have","won","a","epic","reward"],"Spam"]
-E=[["this","is","the","only","oportunity"],"Spam"]
-F=[["henry","you","need","to","finish"],"Ham"]
-G=[["free","pizza","is","epic","now"],"Spam"]
-H=[["eat","hamburgers","for","free","now"],"Spam"]
-J=[["henry","where","are","you","know"],"Ham"]
-
-
-
-Data=[A,B,C,D,E,F,G,H,J]
-
-D,PH,PS=Naive_bayes(Data)
-
-###Data has been collected and probabilites are calculated now we only need to classify a new entity what we have learnet.
-
-X=["henry","serious","sick","now","need","?"]
-predict(X,D,PH,PS)
-
-X=["epic","eat","free","pizza","now"]
-predict(X,D,PH,PS)
+	A=[["this","is","epic","i","promise"],"Spam"]
+	B=[["this","is","serious","now","henry"],"Ham"]
+	C=[["henry","is","now","serious","sick"],"Ham"]
+	D=[["you","have","won","a","epic","reward"],"Spam"]
+	E=[["this","is","the","only","oportunity"],"Spam"]
+	F=[["henry","you","need","to","finish"],"Ham"]
+	G=[["free","pizza","is","epic","now"],"Spam"]
+	H=[["eat","hamburgers","for","free","now"],"Spam"]
+	J=[["henry","where","are","you","know"],"Ham"]
 
 
 
+	Data=[A,B,C,D,E,F,G,H,J]
+
+	D,PH,PS=Naive_bayes(Data)
+
+	###Data has been collected and probabilites are calculated now we only need to classify a new entity what we have learnet.
+
+	X=["henry","serious","sick","now","need","?"]
+	predict(X,D,PH,PS)
+
+	X=["epic","eat","free","pizza","now"]
+	predict(X,D,PH,PS)
+
+
+test()
 
 
 
