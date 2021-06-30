@@ -1,7 +1,5 @@
 # K-mean Clusters
 
-
-
 import random as ran
 import numpy as np
 from matplotlib import pyplot as plt
@@ -12,7 +10,7 @@ pi=3.1415926535897932
 
 colour_list=["b","g","r","c","m","y","k","w"]
 
-#Define you amount of clusters k
+#Define you amount of clusters k more then 8 can not be plotted
 Y=5
 
 def metric(x,y): # The metric function of the space
@@ -29,7 +27,8 @@ def metric(x,y): # The metric function of the space
 
 	return d
 
-def create_data():
+def create_data():# a function to define data that forms a spehere 
+
 	X=[]
 
 
@@ -69,14 +68,21 @@ def K_Cluster(X,k):# Find the best cluster
 
 		centroids[i] = X[i]
 
+	#Create the initial clusters
+
 	for data in X:
 
 		euc_dist = []
+
 		for i in range(k):
+
 			d=metric(data,centroids[i])
+
 			euc_dist.append(np.linalg.norm(d))
 
 		clusters[euc_dist.index(min(euc_dist))].append(data)
+
+	#Loops centroids and clusters to find the optimum
 
 	for i in range(0,100):
 
@@ -117,8 +123,6 @@ def recalculate_clusters(X, centroids, k):
 
 	return clusters
 
-
-
 def recalculate_centroids(centroids, clusters, k):
 
 	for i in range(k):
@@ -126,43 +130,6 @@ def recalculate_centroids(centroids, clusters, k):
 		centroids[i] = np.average(clusters[i],axis=0)
 
 	return centroids
-
-
-
-
-# for data in X:
-#     euc_dist = []
-#     for j in range(k):
-#         euc_dist.append(np.linalg.norm(data - centroids[j]))
-#     clusters[euc_dist.index(min(euc_dist))].append(data)
-
-
-
-	
-
-def find_nearest(cluster_list,v):
-
-	d=metric(cluster_list[0],v)
-
-	s_old=scalor_product(d)
-
-	cluster=cluster_list[0]
-
-	for i in range(0,len(cluster_list)):
-
-		d=metric(cluster_list[i],v)
-
-		s=scalor_product(d)#Find the scalor product between all distance. 
-
-		if s<s_old:
-
-			cluster=cluster_list[i]
-
-			s_old=s
-
-			j=i
-
-	return i
 
 def draw_data(clusters,centroids,k):
 
@@ -189,31 +156,12 @@ def draw_data(clusters,centroids,k):
 
 			plt.scatter(x, y,s=300,c="y", marker="*")
 
-
-
-
 	plt.show()
-
-
 
 X=create_data()
 
 centroids,clusters=K_Cluster(X,Y)
 
-
-
 draw_data(clusters,centroids,Y)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
