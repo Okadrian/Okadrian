@@ -16,25 +16,21 @@ def create_data():#Create some data that is normal distrubutated in a complex wa
 
 		for j in range(0,2):
 
-			if whole<-5:
+			if whole<-50:
 
 				gaussian=ran.gauss(0,20)
 
-				noise=ran.uniform(-0.5,0.5)
 
-			elif whole<5:
+			elif whole<50:
 
-				gaussian=ran.gauss(0,1)
-
-				noise=ran.uniform(-0.3,0.3)
+				gaussian=ran.gauss(0,40)
 
 			else:
 
-				gaussian=ran.gauss(0,3)
+				gaussian=ran.gauss(0,10)
 
-				noise=ran.uniform(-0.5,0.5)
 
-			X.append(whole+gaussian+noise)
+			X.append(whole+gaussian)
 	return X
 
 def gaussian(x, sig):
