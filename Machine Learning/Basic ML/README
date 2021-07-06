@@ -3,3 +3,4 @@ Very basic ML such as:
 Naive bays
 k-NN (nearest neighbor method with 1 and k)
 K-mean method (Classify data in to clusters)
+Kernel_function (Add dimention to data to improve output of machine learning algortim, like SVM)
