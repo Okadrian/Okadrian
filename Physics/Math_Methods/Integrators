@@ -1,0 +1,103 @@
+"""A super Simple Library to use for integrators when tackling physics"""
+
+def force(self, osc):
+
+
+    #Decide on a force
+
+    return Force
+        
+
+
+
+class BaseIntegrator:
+
+    def __init__(self, _dt=0.01):
+        self.dt = _dt  # time step
+
+class EulerIntegrator(BaseIntegrator):
+    def timestep(self, x , dx, m , dt, t ):
+
+        ddx  = force(osc) / m
+
+
+        # TODO: Implement the integration here, updating x and dx
+        # [your implementation goes here ...]
+
+        x = x + dx * dt  # the position/angle
+        dx = dx + ddx  * dt
+
+        t += dt
+
+
+class EulerCromerIntegrator(BaseIntegrator):
+    def timestep(self, x , dx, m , dt, t ):
+        ddx  = force(osc) / m
+
+
+        # TODO: Implement the integration here, updating x and dx
+        # [your implementation goes here ...]
+
+        dx = dx + ddx  * dt
+        x = x + dx * dt  # the position/angle
+
+        t += dt
+
+
+class VerletIntegrator(BaseIntegrator):
+    def timestep(self, x , dx, m , dt, t ):
+        ddx  = force(osc) / m
+
+        # TODO: Implement the integration here, updating x and dx
+        # [your implementation goes here ...]
+
+        x = x + dx * dt + 0.5* ddx  *dt**2  # the position/angle
+
+        dd_x = force(osc) / m
+
+        dx = dx + 0.5 * ( dd_x + ddx  ) * dt
+
+        t += dt
+
+
+class RK4Integrator(BaseIntegrator):
+    def timestep(self, x , dx, m , dt, t ):
+        ddx  = force(osc) / m
+
+        # TODO: Implement the integration here, updating x and dx
+        # [your implementation goes here ...]
+
+        x=x
+        Dx=dx
+
+        a_1= ddx *dt
+        b_1= dx*dt
+
+        # Redifine the system temporarly to uppdated ddx 
+
+        x=x+b_1/2
+        dx=Dx+a_1/2
+
+        a_2 = (force(osc) / m)*dt
+        b_2 = (Dx + a_1)*dt
+
+        x=x+b_2/2
+        dx=Dx+a_2/2
+
+        a_3 = (force(osc) / m)*dt
+        b_3 = (Dx + a_2)*dt
+
+        x=x+b_3
+        dx=Dx+a_3
+
+        a_4 = (force(osc) / m)*dt
+        b_4 = (Dx + a_3)*dt
+
+        x=x
+        dx=Dx
+
+        dx = dx+(a_1+2*a_2+2*a_3+a_4)/6
+
+        x = x+(b_1+2*b_2+2*b_3+b_4)/6
+
+        t += dt
