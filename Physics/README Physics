@@ -1,1 +1,10 @@
 This is a place where i post code to help with all kind of physics. Such as Quantum mechanics, Classical Mechanics and relativity.
+
+
+QuaAlg is a library for faster calculations in linear algebra and quantum mechanics
+
+Relativity i put simulations regarding realtivity. Currently i only have a solar system model. That can compare Newtons predictions with Einsteins predictions.
+
+Electro statics i have some functions to find simple green functions with random walks
+
+Math methods is a place where i store important integrators for my physics simulations
