@@ -1,3 +1,8 @@
+"""In this model I have created a model for simulating planets In the solar system with both newtons gravitational approaches
+and a simple general relativity model. With this simple model one can observe the behaviour of Mercury that was among the 
+first sign Einstein theory was more complete."""
+
+
 import matplotlib
 from matplotlib import animation
 from pylab import *
