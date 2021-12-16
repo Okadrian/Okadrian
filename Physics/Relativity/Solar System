@@ -1,0 +1,280 @@
+import matplotlib
+from matplotlib import animation
+from pylab import *
+import numpy as np
+import random
+
+import math
+
+G=-0.1
+
+TIME=100000
+
+class SolarSystem:
+
+	def __init__(self,M,Planet_list,integrator,dt):
+
+	# Planet list is a list of many diffrent planets. Every planet is it own list.
+	# With it own theta, radius and mass, aka [t,r,m]
+		
+		if integrator==EulerStabelIntegratorEinstein:
+
+			M=M*G
+
+		self.M=M
+		self.Planets=[]
+		self.Time=0
+		self.integrator=integrator
+		self.dt=dt
+		K=0
+
+		for i in Planet_list:
+
+			S=K*0.1
+
+			K=K+1
+
+			self.Planets.append(Planet(i[0],i[1],i[2],i[3],self,S))
+
+		for i in self.Planets:
+
+			print("Planet "+ i.name)
+			print(i.t)
+			print(i.r)
+			print(i.m)
+
+	def run(self):
+
+		#Run simulation
+
+		for i in range(0,int(TIME/self.dt)):
+			
+			self.Time=self.Time+self.dt
+
+			for j in self.Planets:
+
+				self.integrator(j,self,self.dt)
+
+
+	def Plot_Paths(self):
+
+		figure, axes = plt.subplots()
+
+		Names=[]
+
+		for i in self.Planets:
+
+			plt.plot(i.x_s,i.y_s,linestyle='-')
+
+			Names.append(i.name)
+
+		plt.legend(Names)
+		if EulerStabelIntegratorNewton==self.integrator:
+
+			plt.title("Newtons Solar system orbit plot")
+
+		else: 
+
+			plt.title("Einsteins Solar system orbit plot")
+
+		plt.xlabel('x axis')
+		plt.ylabel('y axis')
+		plt.tight_layout()  # adapt the plot area tot the text with larger fonts 
+		draw_circle = plt.Circle((0.5, 0.5), 10,color="y")
+		axes.set_aspect(1)
+		axes.add_artist(draw_circle)
+		plt.show()
+
+	def integrate(self):
+
+		for i in self.Planets:
+
+			summa=0
+
+			N=len(i.x_s)
+
+			for j in range (0,N-1):
+
+				Distance_r=np.sqrt(((i.x_s[j]+i.x_s[j+1])/2)**2+((i.y_s[j]+i.y_s[j+1])/2)**2)#Distance from oriGO
+
+				summa=Distance_r+summa
+
+			summa=summa/N
+
+		return summa
+
+
+
+class Planet:
+
+	def __init__(self,t,r,m,name,Solar,S):
+
+		#Here i definte the planet with its relevant sizes
+		self.t=t
+		self.dthe=0
+		
+		self.m=m
+
+		
+		self.r=np.array([r*np.cos(t),r*np.sin(t),0])
+		self.dr=0
+		
+
+		R=math.sqrt(np.sum(self.r**2))
+
+		if Solar.integrator==EulerStabelIntegratorNewton:
+
+			v=math.sqrt(abs(G*Solar.M/R))
+		else:
+
+			v=math.sqrt(abs(Solar.M/R))
+
+		v=v+v*S
+
+		self.v=np.array([0,v,0])
+		self.name=name
+
+		self.x_s=[]
+		self.y_s=[]
+
+
+def EulerStabelIntegratorNewton(Planet,Solar,dt):
+
+	Planet.r += Planet.v * dt
+
+	R = np.sqrt(Planet.r[0]**2+Planet.r[1]**2)
+
+	acc_x =  Planet.r[0]*G * Solar.M / R**3
+	acc_y =  Planet.r[1]*G * Solar.M / R**3
+
+	acc=np.array([acc_x,acc_y,0])
+
+	Planet.v += acc * dt
+
+	Planet.x_s.append(float(Planet.r[0]))
+	Planet.y_s.append(float(Planet.r[1]))
+
+
+def EulerStabelIntegratorEinstein(Planet,Solar,dt):
+
+	Planet.r += Planet.v * dt
+
+	R = np.sqrt(Planet.r[0]**2+Planet.r[1]**2)
+	V = np.sqrt(Planet.v[0]**2+Planet.v[1]**2)
+	M = Solar.M
+
+	Planet.dr=np.linalg.norm(np.dot(Planet.v,Planet.r))/R
+	Planet.dthe=np.linalg.norm(np.cross(Planet.r,Planet.v))/(R**2)
+
+
+	if Planet.r[1]>=0:
+
+		Planet.t =  np.arccos(Planet.r[0]/R)
+
+	else:
+
+		Planet.t = np.pi*2 - np.arccos(Planet.r[0]/R)
+
+
+	dr_dot_dt=(-4*M+2*M*R+(Planet.dthe**2)*(R-5*M)*R**3)/(R**3)
+	dt_dot_dt=2*((-3*M+R)*Planet.dr*Planet.dthe)/((2*M-R)*R)
+
+	acc=np.array([dr_dot_dt*np.cos(Planet.t)-dt_dot_dt*np.sin(Planet.t),dr_dot_dt*np.sin(Planet.t)+dt_dot_dt*np.cos(Planet.t),0])
+
+	Planet.v = Planet.v + acc * dt
+
+	Planet.x_s.append(Planet.r[0])
+	Planet.y_s.append(Planet.r[1])
+
+def plot_Newton_And_Einstein(Newton,Einstein):
+
+	igure, axes = plt.subplots()
+
+	Newton=Newton.Planets[0]
+	Einstein=Einstein.Planets[0]
+
+
+	plt.title("Solar system models for diffrent planets")
+	plt.plot(Einstein.x_s,Einstein.y_s,linestyle='-')
+	plt.plot(Newton.x_s,Newton.y_s,linestyle='-')
+
+	plt.legend(["Einsteins Prediction", "Newtons Predictions"])
+
+	plt.xlabel('x axis')
+	plt.ylabel('y axis')
+
+	plt.tight_layout() 
+	draw_circle = plt.Circle((0.5, 0.5), 10,color="y")
+	axes.set_aspect(1)
+	axes.add_artist(draw_circle)
+	plt.show()
+
+def convergece():
+
+
+	F=10
+
+	DT=[]
+
+	for i in range(800,10,-50):
+
+		DT.append(i*F)
+
+	Areas=[]
+
+	for i in range(0,len(DT)):
+
+		dt=DT[i]
+
+		#Solar=SolarSystem(M,Planet_list,EulerStabelIntegratorNewton,dt)
+
+		Solar=SolarSystem(M,Planet_list,EulerStabelIntegratorEinstein,dt)
+
+		Solar.run()
+
+		intergral=Solar.integrate()
+
+		Areas.append(intergral)
+
+	convergence_rate=[]
+
+	for k in range(1,len(DT)):
+
+		convergence_rate.append(abs(Areas[k]/Areas[k-1]))
+
+	print(convergence_rate)
+
+	plt.title("Convergence rate of plot")
+	DT=DT[1:]
+
+
+	plt.plot(convergence_rate,linestyle='-')
+
+	plt.xlabel('Amount of steps')
+	plt.ylabel('Convergence')
+
+	plt.tight_layout() 
+	plt.show()
+
+
+
+
+R=1000
+#Planet_list=[[0,R,1,"Inital condition 1"],[0,R,1,"Inital condition 2"],[0,R,1,"Inital condition 3"]]
+Planet_list=[[0,R,1,"Inital condition 1"]]
+M=100
+dt=50
+
+
+Solar_Newton=SolarSystem(M,Planet_list,EulerStabelIntegratorNewton,dt)
+
+Solar_Newton.run()
+
+Solar_Newton.Plot_Paths()
+
+#Solar_Einstein=SolarSystem(M,Planet_list,EulerStabelIntegratorEinstein,dt)
+
+#Solar_Einstein.run()
+
+#Solar_Einstein.Plot_Paths()
+
